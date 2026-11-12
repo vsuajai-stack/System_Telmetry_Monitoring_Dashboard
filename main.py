@@ -27,16 +27,33 @@ def get_system_telemetry():
             "disk_total": disk_total,
             "disk_used": disk_used}
 
+def dynamic_color_coding(used=0, total=1,percent=0):
+    percen=(used/total)*100
+    if percen==0:
+        percen=percent
+    color_code=[percen]
+    if percen<50:
+        color_code.append('green')
+    elif percen<=75:
+        color_code.append('yellow')
+    elif percen>75:
+        color_code.append('red')
+    return color_code
+
+
 def create_telemetry_panel(stats):
-  return Panel.fit(
-      f"[bold green]CPU Load     : {stats['cpu_load']}%[/bold green]\n"
-      f"[bold blue]RAM Used     : {stats['ram_used']:.2f} MB /"
-      f" {stats['ram_total']:.2f} MB[/bold blue]\n"
-      f"[bold cyan]Disk Used    : {stats['disk_used']:.2f} MB /"
-      f" {stats['disk_total']:.2f} MB[/bold cyan]",
-      title="[bold yellow]System Telemetry Dashboard[/bold yellow]",
-      border_style="white",
-  )
+    ram_color_code = dynamic_color_coding(stats['ram_used'], stats['ram_total'])
+    cpu_color_code = dynamic_color_coding(percent=stats['cpu_load'])
+    disk_color_code = dynamic_color_coding(stats['disk_used'], stats['disk_total'])
+    return Panel.fit(
+        f"[bold {cpu_color_code[1]}]CPU Load     : {stats['cpu_load']}% [/bold {cpu_color_code[1]}]\n"
+        f"[bold {ram_color_code[1]}]RAM Used     : {stats['ram_used']:.2f} MB /"
+        f" {stats['ram_total']:.2f} MB  |   {ram_color_code[0]:.1f}%[/bold {ram_color_code[1]}]\n"
+        f"[bold {disk_color_code[1]}]Disk Used    : {stats['disk_used']:.2f} MB /"
+        f" {stats['disk_total']:.2f} MB |   {disk_color_code[0]:.1f}%[/bold {disk_color_code[1]}]",
+        title="[bold yellow]System Telemetry Dashboard[/bold yellow]",
+        border_style="white",
+    )
 
 def init_db():
     conn=sqlite3.connect('telemetry.db')
