@@ -18,10 +18,13 @@ This simple script uses python to monitor your ram, cpu and disk and shows you h
     - Connect\create telemetry.db and in telemetry.db create system_logs containing add timestamp,cpu_load, ram_used, disk_used column.
    
 4. log_telemetry()
-    - adds the stats to the system_logs table 
+    - Adds the stats to the system_logs table 
 5. print_session_summary()
- - prints the summary of session when the main function is stopped. summary contains average and peak value of ram and cpu usage during session, average value of disk used.
-6. main()
-    -continuously update the panel displaying the stats,decides the frequency of checkup when called and call the print_session summary() function when interrupted 
+   - Prints the summary of session when the main function is stopped. summary contains average and peak value of ram and cpu usage during session, average value of disk used.
+6. dynamic_color_coding()
+    - A helper function, checks how much of  cpu, ram and disk are being used in percentage and return a list containing a color to use when displaying based on basic rule (if percentage < 50 color = green, if percentage =< 75 color = yellow, if percentage > 75 color = red) with the percentage.
+7. main()
+    - Continuously update the panel displaying the stats,decides the frequency of checkup when called and call the print_session summary() function when interrupted 
 #### How to Run ####
 In terminal write Python main.py --interval 5
+Use Ctrl+C to stop the execution and see the summary of session 
